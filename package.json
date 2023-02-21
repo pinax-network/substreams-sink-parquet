@@ -1,6 +1,6 @@
 {
     "name": "substreams-sink-csv",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Substreams CSV sink module",
     "main": "dist/bin/cli.js",
     "bin": {

@@ -21,6 +21,7 @@ program.command('run')
     .option('-s --start-block <int>', 'Start block to stream from. Defaults to -1, which means the initialBlock of the first module you are streaming', "-1")
     .option('-t --stop-block <string>', 'Stop block to end stream at, inclusively.', "0")
     .option('--meta <items>', 'Meta data output columns (comma separated list).', commaSeparatedList)
+    .option('--base <items>', 'Base data output columns (comma separated list).', commaSeparatedList, ["timestamp", "block_num", "service","level","message"])
     .option('--append', 'Append data to output file.')
     .option('--delimiter', 'Character used to separate values in CSV file.', ",")
     

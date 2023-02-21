@@ -1,15 +1,43 @@
 import { WriteStream } from "fs"
 import { Clock } from "substreams";
 
-export function handleOperation(operation: WinstonOperation, clock: Clock, writer: WriteStream, columns: string[], delimiter: string) {
-    let items = [clock.timestamp?.seconds, clock.number, operation.service, operation.level, operation.message];
+export function handleOperation(operation: WinstonOperation, clock: Clock, writer: WriteStream, base_columns: string[], meta_columns: string[], delimiter: string) {
+    // handle clock timestamp
+    const seconds = Number(clock.timestamp?.seconds);
+    const nanos = Number(clock.timestamp?.nanos);
+    const ms = nanos / 1000000;
+    const timestamp = seconds * 1000 + ms;
+    const date = new Date(timestamp);
+
+    // base columns
+    let items: string[] = [];
+    const base = {
+        date: date.toISOString(),
+        year: date.getUTCFullYear(),
+        month: date.getUTCMonth(),
+        day: date.getUTCDay(),
+        timestamp,
+        seconds,
+        block_num: clock.number,
+        block_number: clock.number,
+        service: operation.service,
+        level: operation.level,
+        message: operation.message,
+    } as any;
+
+    push_columns(items, base, base_columns, delimiter);
+    push_columns(items, operation.meta as any, meta_columns, delimiter);
+
+    writer.write(items.join(delimiter) + "\n");
+}
+
+function push_columns(items: string[], object: {[key: string]: string}, columns: string[], delimiter: string) {
     for ( const column of columns ) {
-        const item: string = (operation.meta as any)[column];
-        if ( !item) items.push(""); // if blank
+        const item: string = object[column];
+        if ( !item.length ) items.push(""); // if blank
         else if ( item.includes(delimiter)) items.push(`"${item}"`); // exception when value contains delimiter
         else items.push(item);
     }
-    writer.write(items.join(delimiter) + "\n");
 }
 
 enum LoggingLevels {

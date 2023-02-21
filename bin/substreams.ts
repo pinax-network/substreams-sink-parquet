@@ -7,34 +7,26 @@ export async function run(spkg: string, args: {
     startBlock?: string,
     stopBlock?: string,
     substreamsEndpoint?: string,
-    port?: string,
-    address?: string,
     out?: string,
     meta?: string[],
+    base?: string[],
     append?: boolean,
+    delimiter?: string,
 } = {}) {
     // User params
     const messageTypeName = "pinax.substreams.sink.winston.v1.LoggerOperations";
-    if ( !args.outputModule ) throw new Error("Missing outputModule");
-    if ( !args.out ) throw new Error("Missing out file");
+    if ( !args.outputModule ) throw new Error("[outputModule] is required");
+    if ( !args.out ) throw new Error("[out] is required");
+    if ( !args.delimiter ) throw new Error("[delimiter] is required");
 
-    // TO-DO: add as argument
-    const delimiter = ",";
+    const delimiter = args.delimiter;
 
     // create write stream
-    // TO-DO: support append & no-append
     const writer = fs.createWriteStream(args.out, args.append ? {flags: "a"} : {});
     const meta_columns = args.meta || [];
-    const base_columns = [
-        "timestamp",
-        "block_num",
-        "service",
-        "level",
-        "message",
-    ];
+    const base_columns = args.base || [];
 
     // write headers if file does not exists
-    // TO-DO: support no headers
     if ( !args.append || !fs.existsSync(args.out) ) {
         writer.write([...base_columns, ...meta_columns].join(delimiter) + "\n");
     }
@@ -59,7 +51,7 @@ export async function run(spkg: string, args: {
         if (!output.data.mapOutput.typeUrl.match(messageTypeName)) return;
         const decoded = LoggerOperations.fromBinary(output.data.mapOutput.value);
         for ( const operation of decoded.operations ) {
-            handleOperation(operation.toJson(), clock, writer, meta_columns, delimiter);
+            handleOperation(operation.toJson(), clock, writer, base_columns, meta_columns, delimiter);
         }
     });
 
