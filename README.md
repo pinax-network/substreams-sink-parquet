@@ -4,7 +4,6 @@
 [<img alt="npm" src="https://img.shields.io/npm/v/substreams-sink-csv.svg?style=for-the-badge&color=CB0001&logo=npm" height="20">](https://www.npmjs.com/package/substreams-sink-csv)
 [<img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/pinax-network/substreams-sink-csv/ci.yml?branch=main&style=for-the-badge" height="20">](https://github.com/pinax-network/substreams-sink-csv/actions?query=branch%3Amain)
 
-
 > `substreams-sink-csv` fills CSV file from a [Substreams Winston Logger sink](https://github.com/pinax-network/substreams-sink-winston) map output.
 
 ### Further resources
