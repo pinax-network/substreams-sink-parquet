@@ -6,32 +6,16 @@
     "bin": {
         "substreams-sink-csv": "dist/bin/cli.js"
     },
-    "repository": "git@github.com:pinax-network/substreams-sink-csv.git",
-    "keywords": [
-        "substreams",
-        "streamingfast",
-        "firehose",
-        "thegraph",
-        "pinax"
-    ],
-    "author": {
-        "name": "Denis",
-        "email": "denis@pinax.network"
-    },
     "files": [
         "dist"
     ],
-    "contributors": [
-        {
-            "name": "Denis",
-            "email": "denis@pinax.network"
-        },
-        {
-            "name": "Etienne",
-            "email": "etienne@pinax.network"
-        }
-    ],
     "license": "MIT OR Apache-2.0",
+    "repository": "git@github.com:pinax-network/substreams-sink-csv.git",
+    "keywords": ["substreams", "streamingfast", "firehose", "thegraph", "pinax"],
+    "author": {"name": "Denis","email": "denis@pinax.network"},
+    "contributors": [
+        {"name": "Etienne","email": "etienne@pinax.network"}
+    ],
     "scripts": {
         "prepublishOnly": "tsc",
         "build": "tsc && pkg ."
