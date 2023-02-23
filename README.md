@@ -4,12 +4,12 @@
 [<img alt="npm" src="https://img.shields.io/npm/v/substreams-sink-csv.svg?style=for-the-badge&color=CB0001&logo=npm" height="20">](https://www.npmjs.com/package/substreams-sink-csv)
 [<img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/pinax-network/substreams-sink-csv/ci.yml?branch=main&style=for-the-badge" height="20">](https://github.com/pinax-network/substreams-sink-csv/actions?query=branch%3Amain)
 
-> `substreams-sink-csv` fills CSV file from a [Substreams Winston Logger sink](https://github.com/pinax-network/substreams-sink-winston) map output.
+> `substreams-sink-csv` fills CSV file from a [`DatabaseChange`](https://github.com/streamingfast/substreams-database-change) map output.
 
 ### Further resources
 
 - [Substreams documentation](https://substreams.streamingfast.io)
-- [Substreams Winston Sink](https://github.com/pinax-network/substreams-sink-winston)
+- [Substreams `DatabaseChanges`](https://github.com/streamingfast/substreams-database-change)
 
 ## CLI
 [**Use pre-built binaries**](https://github.com/pinax-network/substreams-sink-csv/releases)
@@ -36,11 +36,10 @@ $ substreams-sink-csv run [options] <spkg>
   - [x] Set CSV delimiter
   - [x] Append or overwrite file
   - [x] Output filename (default `out.csv`)
-- [x] Select `meta` columns to output
-- [x] Select `base` columns to output
+- [x] Select columns to output
   - [x] Time (`date,year,month,day,timestamp,seconds`)
   - [x] Block (`block_num`)
-  - [x] Winston (`service,level,message`)
+  - [x] `DatabaseChanges`
 - [x] Set `start-block` & `end-block`
-- [x] Select `outputModule` (default `log_out`)
+- [x] Select `outputModule` (default `db_out`)
 - [x] Select Substream endpoint (default `mainnet.eth.streamingfast.io:443`)

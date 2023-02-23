@@ -1,6 +1,6 @@
 import fs from "fs";
 import { Substreams, download } from "substreams";
-import { handleOperation } from "./handler";
+import { handleDecoded } from "./handler";
 
 export async function run(spkg: string, args: {
     outputModule?: string,
@@ -8,31 +8,31 @@ export async function run(spkg: string, args: {
     stopBlock?: string,
     substreamsEndpoint?: string,
     out?: string,
-    meta?: string[],
-    base?: string[],
+    columns?: string[],
     append?: boolean,
     delimiter?: string,
 } = {}) {
     // User params
-    const messageTypeName = "pinax.substreams.sink.winston.v1.LoggerOperations";
+    const messageTypeName = "sf.substreams.sink.database.v1.DatabaseChanges";
     if ( !args.outputModule ) throw new Error("[outputModule] is required");
     if ( !args.out ) throw new Error("[out] is required");
     if ( !args.delimiter ) throw new Error("[delimiter] is required");
-
+    
     const delimiter = args.delimiter;
-
+    const columns = args.columns ?? [];
+    if ( !columns.length ) throw new Error("[columns] cannot be empty");
+    
     // create write stream
     const writer = fs.createWriteStream(args.out, args.append ? {flags: "a"} : {});
-    const meta_columns = args.meta || [];
-    const base_columns = args.base || [];
 
     // write headers if file does not exists
     if ( !args.append || !fs.existsSync(args.out) ) {
-        writer.write([...base_columns, ...meta_columns].join(delimiter) + "\n");
+        writer.write([...columns].join(delimiter) + "\n");
     }
 
     // Initialize Substreams
     const substreams = new Substreams(args.outputModule, {
+        productionMode: true,
         host: args.substreamsEndpoint,
         startBlockNum: args.startBlock,
         stopBlockNum: args.stopBlock,
@@ -43,16 +43,15 @@ export async function run(spkg: string, args: {
     const { modules, registry } = await download(spkg);
 
     // Find Protobuf message types from registry
-    const LoggerOperations = registry.findMessage(messageTypeName);
-    if (!LoggerOperations) throw new Error(`Could not find [${messageTypeName}] message type`);
+    const DatabaseChanges = registry.findMessage(messageTypeName);
+    if (!DatabaseChanges) throw new Error(`Could not find [${messageTypeName}] message type`);
 
     substreams.on("mapOutput", (output, clock) => {
         // Handle map operations
         if (!output.data.mapOutput.typeUrl.match(messageTypeName)) return;
-        const decoded = LoggerOperations.fromBinary(output.data.mapOutput.value);
-        for ( const operation of decoded.operations ) {
-            handleOperation(operation.toJson(), clock, writer, base_columns, meta_columns, delimiter);
-        }
+        if (output.name != args.outputModule) return;
+        const decoded = DatabaseChanges.fromBinary(output.data.mapOutput.value) as any;
+        handleDecoded(decoded, clock, writer, columns, delimiter);
     });
 
     // start streaming Substream

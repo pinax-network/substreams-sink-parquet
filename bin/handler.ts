@@ -1,60 +1,56 @@
 import { WriteStream } from "fs"
 import { Clock } from "substreams";
+import { TableChange, DatabaseChanges, Operation } from "./interfaces";
 
-export function handleOperation(operation: WinstonOperation, clock: Clock, writer: WriteStream, base_columns: string[], meta_columns: string[], delimiter: string) {
-    // handle clock timestamp
-    const seconds = Number(clock.timestamp?.seconds);
-    const nanos = Number(clock.timestamp?.nanos);
-    const ms = nanos / 1000000;
-    const timestamp = seconds * 1000 + ms;
-    const date = new Date(timestamp);
+export function handleDecoded(decoded: DatabaseChanges, clock: Clock, writer: WriteStream, columns: string[], delimiter: string) {
+    for ( const operation of decoded.tableChanges ) {
+        // handle clock timestamp
+        const seconds = Number(clock.timestamp?.seconds);
+        const nanos = Number(clock.timestamp?.nanos);
+        const ms = nanos / 1000000;
+        const timestamp = seconds * 1000 + ms;
+        const date = new Date(timestamp).toISOString();
+        const [year, month, day] = date.split("T")[0].split("-");
 
-    // base columns
-    let items: string[] = [];
-    const base = {
-        date: date.toISOString(),
-        year: date.getUTCFullYear(),
-        month: date.getUTCMonth(),
-        day: date.getUTCDay(),
-        timestamp,
-        seconds,
-        block_num: clock.number,
-        block_number: clock.number,
-        service: operation.service,
-        level: operation.level,
-        message: operation.message,
-    } as any;
+        // skip if not CREATE operation
+        if ( operation.operation != Operation.CREATE ) return;
 
-    push_columns(items, base, base_columns, delimiter);
-    push_columns(items, operation.meta as any, meta_columns, delimiter);
+        // base data
+        const base = {
+            date,
+            year,
+            month,
+            day,
+            timestamp,
+            seconds,
+            block_num: clock.number,
+            block_number: clock.number,
+        } as any;
 
-    writer.write(items.join(delimiter) + "\n");
-}
+        // extracted json from `db_out` map output (will be override base data)
+        const json = table_changes_to_json(operation);
 
-function push_columns(items: string[], object: {[key: string]: string}, columns: string[], delimiter: string) {
-    for ( const column of columns ) {
-        const item: string = object[column];
-        if ( !item.length ) items.push(""); // if blank
-        else if ( item.includes(delimiter)) items.push(`"${item}"`); // exception when value contains delimiter
-        else items.push(item);
+        // write CSV in order of user specified columns
+        let items: string[] = [];
+        push_rows(items, Object.assign(base, json), columns, delimiter);
+        if ( !items.length) return; // skip empty
+        writer.write(items.join(delimiter) + "\n");
     }
 }
 
-enum LoggingLevels {
-    // UNSPECIFIED = 0; // Unspecified: default value
-    EMERG = 0,       // Emergency: system is unusable
-    ALERT = 1,       // Alert: action must be taken immediately
-    CRIT = 2,        // Critical: critical conditions
-    ERROR = 3,       // Error: error conditions
-    WARNING = 4,     // Warning: warning conditions
-    NOTICE = 5,      // Notice: normal but significant condition
-    INFO = 6,        // Informational: informational messages
-    DEBUG = 7,       // Debug: debug-level messages
+function table_changes_to_json(operation: TableChange) {
+    const json: any = {};
+    for ( const { name, newValue } of operation.fields ) {
+        json[name] = newValue;
+    }
+    return json;
 }
 
-interface WinstonOperation {
-    service: string;
-    level: LoggingLevels;
-    message: string;
-    meta: Map<string, string>;
+function push_rows(items: string[], object: {[key: string]: string}, columns: string[], delimiter: string) {
+    for ( const column of columns ) {
+        const item: string = object[column];
+        if ( !item ) items.push(""); // if blank
+        else if ( typeof item == "string" && item.includes(delimiter)) items.push(`"${item}"`); // exception when value contains delimiter
+        else items.push(item);
+    }
 }
