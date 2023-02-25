@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { run } from "./substreams";
+import { run } from "..";
 import pkg from "../package.json";
 
 function commaSeparatedList(value: string) {
@@ -21,6 +21,7 @@ program.command('run')
     .option('-s --start-block <int>', 'Start block to stream from. Defaults to -1, which means the initialBlock of the first module you are streaming', "-1")
     .option('-t --stop-block <string>', 'Stop block to end stream at, inclusively.', "0")
     .option('--columns <items>', 'Output columns (comma separated list).', commaSeparatedList, ["timestamp", "block_num"])
+    .option('--add-header-row <bool>', 'Add the name of the columns to the first row of the file ', true)
     .option('--append', 'Append data to output file.')
     .option('--delimiter', 'Character used to separate values in CSV file.', ",")
 

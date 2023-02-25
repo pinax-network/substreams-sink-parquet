@@ -1,8 +1,8 @@
 {
     "name": "substreams-sink-csv",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Substreams CSV sink module",
-    "main": "dist/bin/cli.js",
+    "main": "dist/index.js",
     "bin": {
         "substreams-sink-csv": "dist/bin/cli.js"
     },
@@ -11,10 +11,22 @@
     ],
     "license": "MIT OR Apache-2.0",
     "repository": "git@github.com:pinax-network/substreams-sink-csv.git",
-    "keywords": ["substreams", "streamingfast", "firehose", "thegraph", "pinax"],
-    "author": {"name": "Denis","email": "denis@pinax.network"},
+    "keywords": [
+        "substreams",
+        "streamingfast",
+        "firehose",
+        "thegraph",
+        "pinax"
+    ],
+    "author": {
+        "name": "Denis",
+        "email": "denis@pinax.network"
+    },
     "contributors": [
-        {"name": "Etienne","email": "etienne@pinax.network"}
+        {
+            "name": "Etienne",
+            "email": "etienne@pinax.network"
+        }
     ],
     "scripts": {
         "prepublishOnly": "tsc",
@@ -22,7 +34,8 @@
     },
     "dependencies": {
         "commander": "10.x",
-        "substreams": "0.3.x"
+        "substreams": "0.3.x",
+        "winston": "3.x"
     },
     "devDependencies": {
         "pkg": "5.x",
