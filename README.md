@@ -1,45 +1,51 @@
-# [`Substreams`](https://substreams.streamingfast.io/) CSV sink module
+# [`Substreams`](https://substreams.streamingfast.io/) [Parquet](https://parquet.apache.org) sink module
 
-[<img alt="github" src="https://img.shields.io/badge/Github-substreams.csv-8da0cb?style=for-the-badge&logo=github" height="20">](https://github.com/pinax-network/substreams-sink-csv)
-[<img alt="npm" src="https://img.shields.io/npm/v/substreams-sink-csv.svg?style=for-the-badge&color=CB0001&logo=npm" height="20">](https://www.npmjs.com/package/substreams-sink-csv)
-[<img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/pinax-network/substreams-sink-csv/ci.yml?branch=main&style=for-the-badge" height="20">](https://github.com/pinax-network/substreams-sink-csv/actions?query=branch%3Amain)
+[<img alt="github" src="https://img.shields.io/badge/Github-substreams.csv-8da0cb?style=for-the-badge&logo=github" height="20">](https://github.com/pinax-network/substreams-sink-parquet)
+[<img alt="npm" src="https://img.shields.io/npm/v/substreams-sink-parquet.svg?style=for-the-badge&color=CB0001&logo=npm" height="20">](https://www.npmjs.com/package/substreams-sink-parquet)
+[<img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/pinax-network/substreams-sink-parquet/ci.yml?branch=main&style=for-the-badge" height="20">](https://github.com/pinax-network/substreams-sink-parquet/actions?query=branch%3Amain)
 
-> `substreams-sink-csv` fills CSV file from a [`DatabaseChange`](https://github.com/streamingfast/substreams-database-change) map output.
+> `substreams-sink-parquet` fills Parquet file format.
 
 ### Further resources
 
+- [Parquet: more than just "Turbo CSV"](https://csvbase.com/blog/3)
 - [Substreams documentation](https://substreams.streamingfast.io)
 - [Substreams `DatabaseChanges`](https://github.com/streamingfast/substreams-database-change)
 
 ## CLI
-[**Use pre-built binaries**](https://github.com/pinax-network/substreams-sink-csv/releases)
+[**Use pre-built binaries**](https://github.com/pinax-network/substreams-sink-parquet/releases)
 - [x] MacOS
 - [x] Linux
 - [x] Windows
 
 **Install** globally via npm
 ```
-$ npm install -g substreams-sink-csv
+$ npm install -g substreams-sink-parquet
+```
+
+## Schema
+**schema.yaml**
+
+```yaml
+name:
+  type: 'UTF8'
+colours:
+  type: 'UTF8'
+  repeated: true
+stock:
+  repeated: true
+  fields:
+    price:
+      type: 'DOUBLE'
+    quantity:
+      type: 'INT64'
 ```
 
 **Run**
 ```
-$ substreams-sink-csv run [options] <spkg>
+$ substreams-sink-parquet run [options] <spkg>
 ```
 
 ## Features
-- Consume `*.spkg` from:
-  - [x] Load URL or IPFS
-  - [ ] Read from `*.spkg` local filesystem
-  - [ ] Read from `substreams.yaml`
-- Output as CSV file
-  - [x] Set CSV delimiter
-  - [x] Append or overwrite file
-  - [x] Output filename (default `out.csv`)
-- [x] Select columns to output
-  - [x] Time (`date,year,month,day,timestamp,seconds`)
-  - [x] Block (`block_num`)
-  - [x] `DatabaseChanges`
-- [x] Set `start-block` & `end-block`
-- [x] Select `outputModule` (default `db_out`)
-- [x] Select Substream endpoint (default `mainnet.eth.streamingfast.io:443`)
+- [ ] Create Schema `schema.yaml` file based on Substreams `spkg` file
+- [ ] Output to `.parquet` file binary format

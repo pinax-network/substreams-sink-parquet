@@ -1,16 +1,16 @@
 {
-    "name": "substreams-sink-csv",
-    "version": "0.2.1",
-    "description": "Substreams CSV sink module",
+    "name": "substreams-sink-parquet",
+    "version": "0.1.0",
+    "description": "Substreams Parquet sink module",
     "main": "dist/index.js",
     "bin": {
-        "substreams-sink-csv": "dist/bin/cli.js"
+        "substreams-sink-parquet": "dist/bin/cli.js"
     },
     "files": [
         "dist"
     ],
     "license": "MIT OR Apache-2.0",
-    "repository": "git@github.com:pinax-network/substreams-sink-csv.git",
+    "repository": "git@github.com:pinax-network/substreams-sink-parquet.git",
     "keywords": [
         "substreams",
         "streamingfast",
@@ -22,23 +22,20 @@
         "name": "Denis",
         "email": "denis@pinax.network"
     },
-    "contributors": [
-        {
-            "name": "Etienne",
-            "email": "etienne@pinax.network"
-        }
-    ],
     "scripts": {
         "prepublishOnly": "tsc",
-        "build": "tsc && pkg ."
+        "build": "tsup index.ts bin/cli.ts --dts",
+        "pkg": "ncc build bin/cli.ts -o build && pkg build/index.js"
     },
     "dependencies": {
-        "commander": "10.x",
-        "substreams": "0.3.x",
-        "winston": "3.x"
+        "substreams": "0.5.x",
+        "substreams-sink": "0.2.x"
     },
     "devDependencies": {
+        "@types/node": "*",
+        "@vercel/ncc": "0.36.x",
         "pkg": "5.x",
-        "typescript": "4.x"
+        "tsup": "6.x",
+        "typescript": "5.x"
     }
 }
