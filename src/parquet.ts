@@ -1,24 +1,33 @@
-type Schema = any;
+import { PathLike, WriteStream } from "fs";
+import parquet, { ParquetSchema } from "parquetjs";
 
-interface Options {
-
+export interface ParquetWriterOpts {
+    autoClose?: boolean | undefined;
+    bitWidth?: number | undefined;
+    disableEnvelope?: boolean | undefined;
+    encoding?: string | undefined;
+    fd?: number | undefined;
+    flags?: string | undefined;
+    mode?: number | undefined;
+    rowGroupSize?: number | undefined;
+    start?: number | undefined;
+    useDataPageV2?: boolean | undefined;
 }
 
 export class ParquetWriter {
-    static async openFile(schema: Schema, path: string, opts: Options) {
-        console.log(schema);
-        return new ParquetWriter();
+    static async openFile(schema: ParquetSchema, path: PathLike, opts?: ParquetWriterOpts) {
+        return parquet.ParquetWriter.openFile(schema, path, opts);
     }
 
-    static async openStream(schema: Schema, outputStream: any, opts: Options) {
-        console.log(schema);
+    static async openStream(schema: ParquetSchema, outputStream: WriteStream, opts?: ParquetWriterOpts) {
+        return parquet.ParquetWriter.openStream(schema, outputStream, opts);
     }
 
     async appendRow(message: any) {
         console.log(message);
     }
 
-    constructor( ) {
-
+    async close() {
+        console.log("closed");
     }
 }

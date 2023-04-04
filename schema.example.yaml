@@ -1,12 +1,12 @@
-name:
-  type: 'UTF8'
-colours:
-  type: 'UTF8'
-  repeated: true
-stock:
+clock:
+  id:
+    type: 'UTF8'
+  number:
+    type: 'UINT_64'
+operations:
   repeated: true
   fields:
-    price:
-      type: 'DOUBLE'
-    quantity:
-      type: 'INT64'
+    name:
+      type: 'UTF8'
+    operation:
+      type: 'UTF8'
