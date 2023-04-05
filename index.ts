@@ -36,7 +36,9 @@ export async function action(manifest: string, moduleName: string, options: Acti
     const writer = await parquet.ParquetWriter.openFile(schema, options.out);
 
     substreams.on("anyMessage", async (message: EntityChanges, clock: Clock, typeName: string) => {
+         // Only support for EntityChanges
         if (typeName != TYPE_NAME ) return;
+
         for ( const entityChange of message?.entityChanges || []) {
             const json = entityChange.toJson() as any;
             const fields: any = {};

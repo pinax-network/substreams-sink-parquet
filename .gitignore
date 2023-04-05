@@ -13,3 +13,4 @@ node_modules
 *.csv
 *.lock
 *.parquet
+build

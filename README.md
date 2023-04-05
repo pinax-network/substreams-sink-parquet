@@ -24,28 +24,44 @@ $ npm install -g substreams-sink-parquet
 ```
 
 ## Schema
-**schema.yaml**
+
+[**schema.yaml**](schema.example.yaml)
 
 ```yaml
-name:
-  type: 'UTF8'
-colours:
-  type: 'UTF8'
-  repeated: true
-stock:
-  repeated: true
+clock:
   fields:
-    price:
-      type: 'DOUBLE'
-    quantity:
-      type: 'INT64'
+    id:
+      type: UTF8
+    number:
+      type: UINT_64
+    timestamp:
+      type: INT_64
+module:
+  fields:
+    type_name:
+      type: UTF8
+    hash:
+      type: UTF8
+entity_change:
+  fields:
+    entity:
+      type: UTF8
+    id:
+      type: UTF8
+    ordinal:
+      type: UINT_64
+    operation:
+      type: UTF8
+# <...fields>
 ```
 
 **Run**
 ```
-$ substreams-sink-parquet run [options] <spkg>
+$ substreams-sink-parquet run [options] [<manifest>] <module_name>
 ```
 
 ## Features
-- [ ] Create Schema `schema.yaml` file based on Substreams `spkg` file
-- [ ] Output to `.parquet` file binary format
+- [x] Read `schema.yaml` user defined file
+- [x] Output to `.parquet` file binary format
+- [x] `EntityChanges` support
+- [ ] Pkg support
