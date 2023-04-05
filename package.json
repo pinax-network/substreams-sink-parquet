@@ -1,6 +1,6 @@
 {
     "name": "substreams-sink-parquet",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Substreams Parquet sink module",
     "main": "dist/index.js",
     "bin": {
@@ -23,7 +23,7 @@
         "email": "denis@pinax.network"
     },
     "scripts": {
-        "prepublishOnly": "tsc",
+        "prepublishOnly": "npm run build",
         "build": "tsup index.ts bin/cli.ts --dts",
         "pkg": "ncc build bin/cli.ts -o build && pkg build/index.js"
     },
