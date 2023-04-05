@@ -31,7 +31,8 @@
         "p-queue": "^7.3.4",
         "parquetjs": "^0.11.2",
         "substreams": "0.5.x",
-        "substreams-sink": "0.2.x"
+        "substreams-sink": "0.2.x",
+        "yaml": "^2.2.1"
     },
     "devDependencies": {
         "@types/node": "*",

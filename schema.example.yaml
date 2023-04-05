@@ -1,12 +1,46 @@
 clock:
-  id:
-    type: 'UTF8'
-  number:
-    type: 'UINT_64'
-operations:
-  repeated: true
   fields:
-    name:
-      type: 'UTF8'
+    id:
+      type: UTF8
+    number:
+      type: UINT_64
+    timestamp:
+      type: INT_64
+module:
+  fields:
+    type_name:
+      type: UTF8
+    hash:
+      type: UTF8
+entity_change:
+  fields:
+    entity:
+      type: UTF8
+    id:
+      type: UTF8
+    ordinal:
+      type: UINT_64
     operation:
-      type: 'UTF8'
+      type: UTF8
+user_id:
+  type: UTF8
+from:
+  type: UTF8
+to:
+  type: UTF8
+quantity:
+  type: UTF8
+contract:
+  type: UTF8
+fee:
+  type: UTF8
+value:
+  type: UTF8
+memo:
+  type: UTF8
+project_id:
+  type: UTF8
+created_at:
+  type: UTF8
+trx_id:
+  type: UTF8
